@@ -1,0 +1,17 @@
+---
+# The variables below are for a Common Cathode RGB led.
+# The red led pin is connected to GPIO22
+# The green led pin is connected to GPIO27
+# The blue pin is connected to GPIO17
+# In case you have a Common Anode RGB led change ledOn to '0' and ledOff to '1'
+red:
+  ledOn: echo '1' > /sys/class/gpio/gpio22/value
+  ledOff: echo '0' > /sys/class/gpio/gpio22/value
+
+green:
+  ledOn: echo '1' > /sys/class/gpio/gpio27/value
+  ledOff: echo '0' > /sys/class/gpio/gpio27/value
+
+blue:
+  ledOn: echo '1' > /sys/class/gpio/gpio17/value
+  ledOff: echo '0' > /sys/class/gpio/gpio17/value

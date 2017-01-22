@@ -1,0 +1,47 @@
+---
+- name: Setup the GPIO pins through bash CLI commands
+  hosts: swarm
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+# GPIO17 (blue led)
+      - name: Register the paths to the symlink
+        stat: path=/sys/class/gpio/gpio17
+        register: sym17
+
+      - name: Initialize GPIO port 17
+        shell: echo "17" > /sys/class/gpio/export
+        when: sym17.stat.islnk is not defined
+
+      - name: Initialize GPIO port 17 for output
+        shell: echo "out" > /sys/class/gpio/gpio17/direction
+
+# GPIO22 (green led)
+      - name: Register the paths to the symlink
+        stat: path=/sys/class/gpio/gpio22
+        register: sym22
+
+      - name: Initialize GPIO port 22
+        shell: echo "22" > /sys/class/gpio/export
+        when: sym22.stat.islnk is not defined
+
+      - name: Initialize GPIO port 22 for output
+        shell: echo "out" > /sys/class/gpio/gpio22/direction
+
+# GPIO27 (red led)
+      - name: Register the paths to the symlink
+        stat: path=/sys/class/gpio/gpio27
+        register: sym27
+
+      - name: Initialize GPIO port 27
+        shell: echo "27" > /sys/class/gpio/export
+        when: sym27.stat.islnk is not defined
+
+      - name: Initialize GPIO port 27 for output
+        shell: echo "out" > /sys/class/gpio/gpio27/direction
+
+# Lampje aan
+      - name: Turn the red led on
+        shell: "{{ red.ledOn }}"

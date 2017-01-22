@@ -1,0 +1,41 @@
+---
+- name: Remove the swarm nodes
+  hosts: swarmNodes
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Remove the node from the swarm
+      command: docker swarm leave
+      register: resultRemoveNode
+    - debug: msg="{{ resultRemoveNode.stdout }}"
+
+    - name: Turn the green led off
+      shell: "{{ green.ledOff }}"
+
+    - name: Turn the red led on
+      shell: "{{ red.ledOn }}"
+
+- name: Remove the initial swarm manager from the swarm
+  hosts: swarmManagers[0]
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Leave the swarm
+      command: docker swarm leave --force
+      register: resultLeaveSwarm
+    - debug: msg="{{ resultLeaveSwarm.stdout }}"
+
+    - name: Turn the blue led off
+      shell: "{{ blue.ledOff }}"
+
+    - name: Turn the red led on
+      shell: "{{ red.ledOn }}"
+
+    - name: Stop the visualization container
+      shell: docker stop $(docker ps | grep alexellis2/visualizer-arm | awk '{print $1}')
+      register: resultStopContainer
+    - debug: msg="{{ resultStopContainer.stdout }}"

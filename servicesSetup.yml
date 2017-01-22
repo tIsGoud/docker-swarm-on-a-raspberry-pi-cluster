@@ -1,0 +1,21 @@
+---
+- name: Start the services in the swarm
+  hosts: swarmManagers[0]
+
+  tasks:
+    - name: Start the busybox service
+      command: docker service create --name busybox -p 8081:80 hypriot/rpi-busybox-httpd
+
+    - name: Start the whoami service
+      command: docker service create --name whoami -p 8082:8000 hypriot/rpi-whoami
+
+
+- name: Open Safari browser with the specified URLs
+  hosts: 127.0.0.1
+
+  tasks:
+    - name: Open busybox page
+      command: "open http://{{ hostvars[groups['swarmManagers'][0]]['ansible_eth0']['ipv4']['address'] }}:8081"
+
+    - name: Open whoami page
+      command: "open http://{{ hostvars[groups['swarmManagers'][0]]['ansible_eth0']['ipv4']['address'] }}:8082"

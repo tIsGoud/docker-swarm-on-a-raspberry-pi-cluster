@@ -1,0 +1,20 @@
+# Inventory file for a six-node Raspberry Pi cluster
+
+[swarmManagers]
+blacknode.local
+
+[additionalSwarmManagers]
+
+[swarmNodes]
+greennode.local
+rednode.local
+pinknode.local
+yellownode.local
+whitenode.local
+
+[swarm:children]
+swarmManagers
+swarmNodes
+
+[swarm:vars]
+ansible_ssh_user=pirate

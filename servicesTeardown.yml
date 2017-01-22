@@ -1,0 +1,16 @@
+---
+- name: Stop the services in the swarm
+  hosts: swarmManagers[0]
+
+  tasks:
+    - name: Set the number of whoami replicas to 0
+      command: docker service update whoami --replicas 0
+
+    - name: Stop the whoami service
+      command: docker service rm whoami
+
+    - name: Set the number of busybox replicas to 0
+      command: docker service update busybox --replicas 0
+
+    - name: Stop the busybox service
+      command: docker service rm busybox

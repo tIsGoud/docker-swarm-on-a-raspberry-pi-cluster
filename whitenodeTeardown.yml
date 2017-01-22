@@ -1,0 +1,23 @@
+---
+- name: Stop and remove the white node from the cluster
+  hosts: whitenode.local
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Leave the cluster
+      command: docker swarm leave
+
+    - name: Turn the green led off
+      shell: "{{ green.ledOff }}"
+
+    - name: Turn the red led on
+      shell: "{{ red.ledOn }}"
+
+- name: Stop and remove the white node from the cluster
+  hosts: swarmManagers[0]
+
+  tasks:
+    - name: Remove the node
+      command: docker node rm whitenode.local

@@ -1,0 +1,10 @@
+---
+- name: Shutdown the hosts
+  hosts: swarm
+  become: true
+
+  tasks:
+    - name: Shutdown
+      command: shutdown -h now
+      async: 10
+      poll: 0

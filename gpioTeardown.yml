@@ -1,0 +1,32 @@
+---
+- name: Cleaning up the symlinks and files
+  hosts: swarm
+  become: true
+
+  tasks:
+# GPIO27 (red led)
+      - name: Register the path to the symlink
+        stat: path=/sys/class/gpio/gpio27
+        register: sym27
+
+      - name: DeRegister the destination symlink
+        shell: echo "27" > /sys/class/gpio/unexport
+        when: sym27.stat.islnk is defined
+
+# GPIO22 (green led)
+      - name: Register the path to the symlink
+        stat: path=/sys/class/gpio/gpio22
+        register: sym22
+
+      - name: DeRegister the destination symlink
+        shell: echo "22" > /sys/class/gpio/unexport
+        when: sym22.stat.islnk is defined
+
+# GPIO17 (blue led)
+      - name: Register the path to the symlink
+        stat: path=/sys/class/gpio/gpio17
+        register: sym17
+
+      - name: DeRegister the destination symlink
+        shell: echo "17" > /sys/class/gpio/unexport
+        when: sym17.stat.islnk is defined

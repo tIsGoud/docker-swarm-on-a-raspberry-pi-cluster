@@ -1,0 +1,27 @@
+---
+- name: Get the worker token from the first swarm manager
+  hosts: swarmManagers[0]
+
+  tasks:
+    - name: Retrieve worker token from swarm manager
+      command: docker swarm join-token -q worker
+      register: workerToken
+    - debug: msg="Worker Token={{ workerToken.stdout }}"
+
+- name: Add the white node to the swarm
+  hosts: whitenode.local
+  become: true
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Join the worker node to the swarm
+      command: docker swarm join --token {{ hostvars[groups['swarmManagers'][0]]['workerToken']['stdout'] }} {{ hostvars[groups['swarmManagers'][0]]['ansible_eth0']['ipv4']['address'] }}:2377
+      register: result
+    - debug: msg="{{ result.stdout }}"
+
+    - name: Turn the red led off
+      shell: "{{ red.ledOff }}"
+
+    - name: Turn the green led on
+      shell: "{{ green.ledOn }}"
